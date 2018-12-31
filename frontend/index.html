@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+      body{
+          background-color:#313131;
+          color: #fff;
+          width: 80%;
+          margin:auto;
+      }
+      input[type="text"]{
+        margin: 1em;
+      }
+      h1{
+        margin: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1> PUBG Winner Predictor </h1>
+    <form class="form-group">
+        <label>Select Game mode</label><br />
+        <label><input type="radio" class="radio-inline" checked />Solo</label>
+        <label><input type="radio" class="radio-inline" />Duo</label>
+        <label><input type="radio" class="radio-inline" />Squad</label>
+        <label>Player name</label>
+        <input type="text" class="form-control"/>
+
+        <label>Number of enemy players knocked</label>
+        <input type="text" class="form-control" />
+
+        <label>Number of healing items used</label>
+        <input type="text" class="form-control" />
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </body>
+</html>
