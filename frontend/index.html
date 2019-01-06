@@ -8,31 +8,32 @@
           width: 80%;
           margin:auto;
       }
-      input[type="text"]{
+      h1{
         margin: 1em;
       }
-      h1{
-        margin: 2em;
+      button[type="submit"]{
+        margin-top: 1em;
       }
+
     </style>
+    <title>PUBG predictor</title>
   </head>
   <body>
     <h1> PUBG Winner Predictor </h1>
-    <form class="form-group">
-        <label>Select Game mode</label><br />
-        <label><input type="radio" class="radio-inline" checked />Solo</label>
-        <label><input type="radio" class="radio-inline" />Duo</label>
-        <label><input type="radio" class="radio-inline" />Squad</label>
-        <label>Player name</label>
-        <input type="text" class="form-control"/>
+    <form class="form-group" method='post'>
 
-        <label>Number of enemy players knocked</label>
-        <input type="text" class="form-control" />
+        <label for="platform">Platform</label>
+        <select class="form-control" id="platform-select">
+          <option value="steam">steam</option>
+          <option value="psn">psn</option>
+          <option value="xbox" selected>xbox</option>
+          <option  value="kakao">kakao</option>
+        </select>
 
-        <label>Number of healing items used</label>
-        <input type="text" class="form-control" />
+        <label for="player-name">Player Name</label><input type="text"
+        class="form-control" placeholder="Username of player" name="player-name" id="player-name">
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        <button type="submit" class="btn btn-primary mb-2" id="submit">Submit</button>
   </body>
+  <script type="application/javascript" src="index.js" charset="utf-8"></script>
 </html>
