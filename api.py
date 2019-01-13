@@ -1,16 +1,16 @@
 import json
 import config
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, render_template
 from flask_cors import CORS, cross_origin
 # to make third part request to pubgAPI
 import requests as R
 
 from sklearn.externals import joblib
 import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
-
 ##############3 DEFINE CONSTANTS #################
 BASE_URL = 'https://api.pubg.com/shards/';
 
@@ -21,12 +21,15 @@ FILE_NAME = "randomForestModel.pkl"
 
 ##################### HANDLE 404 ERROR #############################
 @app.errorhandler(404)
+@cross_origin()
 def not_found(error=None):
     message = {
             'status': 404,
             'message': 'Not Found: ' + request.url,
     }
     resp = jsonify(message)
+    #resp.headers['Access-Control-Allow-Origin'] = '*'
+    #resp.headers['Content-Type'] = 'application/json'
     resp.status_code = 404
 
     return resp
@@ -99,8 +102,8 @@ def data_processing(match_info,match_type):
 
     #feature engineering
     stats['healsandboosts'] = stats['heals'] + stats['boosts']
-
-    stats['headshot_rate'] = stats['headshotKills'] / stats['kills']
+    if(stats['kills']>0):
+        stats['headshot_rate'] = stats['headshotKills'] / stats['kills']
 
     stats['totalDistance']= stats['rideDistance'] + stats['walkDistance'] + stats['swimDistance']
 
@@ -122,20 +125,25 @@ def predict(stats):
     return preds
 
 
-@app.route("/",methods=['GET','POST'])
+@app.route("/",methods=['GET'])
+@cross_origin()
+def index():
+    return render_template('index.html')
+
+
+@app.route("/",methods=['POST'])
 @cross_origin()
 def api():
-    #print('The request \n method: {} \n Type JSON: {} \n Content-Type: {}'.format(request.method,request.is_json,request.headers['Content-Type']))
-    if request.method == "POST" and request.is_json:
-        print('here {}'.format(request.json))
-        data = request.json
-
-        platform_name = data['platform-name']
+    print('The request \n method: {} \n Type JSON: {} \n Content-Type: {}'.format(request.method,request.is_json,request.headers['Content-Type']))
+    if request.method == 'POST':
+        print('HERE',request.form)
+        data = request.form
+        platform_name = 'xbox'
         player_name = data['player-name']
-
+        print(platform_name,player_name)
         # get match id of the given player
         player_id, match_id = getMatchIdOfPlayer(platform_name,player_name)
-        #print(player_id,match_id)
+        print(player_id,match_id)
 
         #get match information from match_id for player_id
         if match_id is not None and player_id is not None:
@@ -146,10 +154,13 @@ def api():
         stats = data_processing(match_info,match_type)
         #  TODO: use this match info to predict the outcome
         output = predict(stats)
+        print('Returning Response')
+        #resp = jsonify(winning_prob = output[0])
+        #resp.headers['Content-Type'] = 'application/json'
+        #resp.status_code = 200
 
-        resp = jsonify({'winning_prob': output[0]})
-        resp.status_code = 200
-        return resp
+        output = np.around(output,decimals=4)*100
+        return render_template('index.html',prediction=output[0])
     else:
         return not_found()
 

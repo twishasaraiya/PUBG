@@ -1,6 +1,7 @@
 <html>
   <head>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
       body{
           background-color:#313131;
@@ -17,6 +18,7 @@
 
     </style>
     <title>PUBG predictor</title>
+    <meta charset="utf-8">
   </head>
   <body>
     <h1> PUBG Winner Predictor </h1>
@@ -34,6 +36,9 @@
         class="form-control" placeholder="Username of player" name="player-name" id="player-name">
 
         <button type="submit" class="btn btn-primary mb-2" id="submit">Submit</button>
+        {% if prediction %}
+        <h1 id='prediction'>Winning Probability: {{prediction}} %</h1>
+        {% endif %}
   </body>
-  <script type="application/javascript" src="index.js" charset="utf-8"></script>
+  <script type="application/javascript" src="static/js/index.js" charset="utf-8"></script>
 </html>
