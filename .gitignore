@@ -1,1 +1,4 @@
-backend/config.py
+config.py
+randomFOrestModel.pkl
+model_columns.pkl
+__pycache__/*
