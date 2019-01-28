@@ -17,7 +17,7 @@ BASE_URL = 'https://api.pubg.com/shards/';
 ## Your pubg api key here
 PUBG_API_KEY = config.api_key
 
-FILE_NAME = "randomForestModel.pkl"
+FILE_NAME = "model/lgb.pkl"
 
 ##################### HANDLE 404 ERROR #############################
 @app.errorhandler(404)
@@ -87,25 +87,19 @@ def getMatchInfoForPlayer(platform_name,match_id,player_id):
 ##################### PREPROCESS THE DATA BEFORE FEEDING TO MODEL ##################
 
 def data_processing(match_info,match_type):
-    unwanted_keys = ['deathType', 'killPointsDelta', 'lastKillPoints', 'lastWinPoints', 'mostDamage', 'name', 'playerId', 'timeSurvived', 'winPointsDelta', 'winPlace']
+    drop_features = ['deathType', 'killPointsDelta', 'lastKillPoints', 'lastWinPoints', 'mostDamage', 'name', 'playerId', 'timeSurvived', 'winPointsDelta', 'winPlace']
 
     final_pos = match_info['winPlace']
 
+    #create a copy to modify
     stats =  match_info
     # reomove extra keys in match_info
-    for x in unwanted_keys:
+    for x in drop_features:
         if x in stats:
             del stats[x]
 
 
-    stats['matchType_' + match_type] = 1
-
     #feature engineering
-    stats['healsandboosts'] = stats['heals'] + stats['boosts']
-    if(stats['kills']>0):
-        stats['headshot_rate'] = stats['headshotKills'] / stats['kills']
-
-    stats['totalDistance']= stats['rideDistance'] + stats['walkDistance'] + stats['swimDistance']
 
     return stats
 
@@ -114,12 +108,12 @@ def data_processing(match_info,match_type):
 def predict(stats):
     model = joblib.load(FILE_NAME)
     print('Model Loaded')
-    model_columns = joblib.load('model_columns.pkl')
+    model_columns = joblib.load('model/lgb_model_columns.pkl')
     print('Model Columns Loaded')
-    #print(model_columns)
     ## generate X as dataframe from stats from PUBG api
     stats_df = pd.get_dummies(pd.DataFrame(stats,index=[0]))
     X = stats_df.reindex(columns = model_columns, fill_value = 0)
+    X.drop(['Id','matchId','groupId','matchType','winPlacePerc'],axis = 1, inplace=True)
     preds = model.predict(X)
     print('WINNING PROBABILITY:',preds)
     return preds
@@ -159,8 +153,8 @@ def api():
         #resp.headers['Content-Type'] = 'application/json'
         #resp.status_code = 200
 
-        output = np.around(output,decimals=4)*100
-        return render_template('index.html',prediction=output[0])
+        output = np.round(output,decimals=4)*100
+        return render_template('index.html',stats= match_info, prediction=output[0])
     else:
         return not_found()
 

@@ -20,7 +20,7 @@
     <title>PUBG predictor</title>
     <meta charset="utf-8">
   </head>
-  <body>
+  <body class="container">
     <h1> PUBG Winner Predictor </h1>
     <form class="form-group" method='post'>
 
@@ -37,7 +37,13 @@
 
         <button type="submit" class="btn btn-primary mb-2" id="submit">Submit</button>
         {% if prediction %}
-        <h1 id='prediction'>Winning Probability: {{prediction}} %</h1>
+        <h2> Match Statistics </h2>
+        <div class="row">
+          {% for key,value in stats.items() %}
+          <p class="col col-md-3">{{key}} {{value}}</p>
+          {% endfor %}
+        </div>
+        <h2 id='prediction'>Winning Probability: {{prediction}} %</h2>
         {% endif %}
   </body>
   <script type="application/javascript" src="static/js/index.js" charset="utf-8"></script>
