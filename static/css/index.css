@@ -1,0 +1,13 @@
+.list li{
+  border: 2px solid transparent;
+  padding: 5px 8px;
+  margin: 10px 0px;
+  border-radius: 1px;
+  border-image: linear-gradient(to right, #69d53a, #3d3ad5);
+  border-image-slice: 1;
+  cursor: pointer;
+}
+
+#loading{
+  display: none;
+}
