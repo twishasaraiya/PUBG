@@ -17,7 +17,7 @@ Check out the PUBG API [DOC](https://documentation.pubg.com/en/players-endpoint.
 
 * To RUN
 
-`cd (folder-name)`
+`cd (folder-path)`
 `python api.py`
 
 Now the server is running on http://localhost:5000
