@@ -1,29 +1,21 @@
 <html>
   <head>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/index.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-      body{
-          background-color:#313131;
-          color: #fff;
-          width: 80%;
-          margin:auto;
-      }
-      h1{
-        margin: 1em;
-      }
-      button[type="submit"]{
-        margin-top: 1em;
-      }
-
-    </style>
     <title>PUBG predictor</title>
     <meta charset="utf-8">
   </head>
-  <body class="container">
-    <h1> PUBG Winner Predictor </h1>
-    <form class="form-group" method='post'>
+  <body>
+  </div class="box">
+  <div  class="image-text">
+    <h1>PUBG Winner Predictor </h1>
+    <p> Get Player Stats, Real time Winning Probability and much more</p>
+  </div>
+    <div class="fixed-bg"></div>
+  </div>
 
+    <div class="main">
         <label for="platform">Platform</label>
         <select class="form-control" id="platform-select">
           <option value="steam">steam</option>
@@ -32,19 +24,21 @@
           <option  value="kakao">kakao</option>
         </select>
 
-        <label for="player-name">Player Name</label><input type="text"
+        <label for="player-name">Player Name</label>
+        <input type="text"
         class="form-control" placeholder="Username of player" name="player-name" id="player-name">
 
         <button type="submit" class="btn btn-primary mb-2" id="submit">Submit</button>
-        {% if prediction %}
-        <h2> Match Statistics </h2>
-        <div class="row">
-          {% for key,value in stats.items() %}
-          <p class="col col-md-3">{{key}} {{value}}</p>
-          {% endfor %}
+
+        <div id="loading">Loading...</div>
+        <div class='row'>
+          <div class='box' id='solo'></div>
+          <div class='box' id='duo'></div>
+          <div class='box' id='squad'></div>
         </div>
-        <h2 id='prediction'>Winning Probability: {{prediction}} %</h2>
-        {% endif %}
+        <ul class="list list-unstyled" id="matches"></ul>
+    <div>
+
   </body>
   <script type="application/javascript" src="static/js/index.js" charset="utf-8"></script>
 </html>
