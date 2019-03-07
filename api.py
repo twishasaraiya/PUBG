@@ -68,8 +68,30 @@ def getMatchIdOfPlayer(player_name):
         return None
 
 ##################### GET PLAYER LIFETIME STATS ##################
-def lifetimeStats():
-    
+def getLifetimeStats():
+    url = BASE_URL + PLATFORM_NAME + '/players/' + PLAYER_ID[8:] + '/seasons/lifetime'
+    print('get player lifetime stats ', url)
+    headers ={
+        "Authorization" : PUBG_API_KEY,
+        "Accept" : "application/vnd.api+json",
+        "Accept-Encoding":"gzip"
+    }
+
+    r = R.get(url,headers=headers)
+    print(r.status_code)
+    if r.status_code == 200:
+        r = json.loads(r.text)
+        feats = [
+          'bestRankPoint',
+          'dailyKills',
+          'dailyWins',
+          'top10s',
+          'weeklyKills',
+          'weeklyWins'
+        ]
+        return r;
+    else:
+        return None
 
 ##################### GET MATCH INFO FOR GIVEN MATCHID ##################
 
@@ -179,6 +201,8 @@ def prediction():
 def api():
     global PLATFORM_NAME
     #print('The request \n method: {} \n Type JSON: {} \n Content-Type: {}'.format(request.method,request.is_json,request.headers['Content-Type']))
+    resp = {}
+
     if request.method == 'POST':
         json = request.get_json()
         PLATFORM_NAME = json['platform-name']
@@ -186,8 +210,13 @@ def api():
         print(PLATFORM_NAME,player_name)
         # get all matches id of the given player
         matches = getMatchIdOfPlayer(player_name)
-        print('MATCHES => ',matches)
-        return jsonify(matches)
+        #print('MATCHES => ',matches)
+        resp['matches'] = matches
+        # get lifetime stats of player
+        lifetimeStats = getLifetimeStats()
+        #print(lifetimeStats)
+        resp['lifetimeStats'] = lifetimeStats['data']['attributes']
+        return jsonify(resp)
     else:
         return not_found()
 
